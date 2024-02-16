@@ -1,31 +1,32 @@
-import React, { ChangeEvent } from "react";
+import { useRef } from "react";
 import { Button } from "../ui/button";
 import { Status } from "@/types";
 import { Input } from "../ui/input";
 
 interface Props {
-  selectedStatus: Status;
   selectStatus: (status: Status) => void;
-  handleSearch: (text: string) => void;
+  selectedStatus: Status;
+  onSearchKeyword: (text: string) => void;
 }
 
 const statusList: Status[] = ["complete", "todo"];
 
-const TodoFileter = ({ selectedStatus, selectStatus, handleSearch }: Props) => {
-  const [keyword, setKeyword] = React.useState("");
-  const handleChangeKeyword = (e: ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
+const TodoFilter = ({
+  selectStatus,
+  selectedStatus,
+  onSearchKeyword,
+}: Props) => {
+  const ref = useRef<HTMLInputElement | null>(null);
 
-  const handleClickSearch = () => {
-    handleSearch(keyword);
+  const handleSearchKeyword = () => {
+    onSearchKeyword(ref?.current?.value || "");
   };
 
   return (
     <div className="space-x-4 space-y-4">
       <div className="flex gap-x-4">
-        <Input onChange={handleChangeKeyword} />
-        <Button onClick={handleClickSearch}>검색</Button>
+        <Input ref={ref} />
+        <Button onClick={handleSearchKeyword}>검색</Button>
       </div>
 
       {statusList.map((status) => (
@@ -39,4 +40,4 @@ const TodoFileter = ({ selectedStatus, selectStatus, handleSearch }: Props) => {
   );
 };
 
-export default TodoFileter;
+export default TodoFilter;
