@@ -1,15 +1,15 @@
 import React from "react";
 import TodoComposer from "./components/TodoComposer";
 import TodoList from "./components/TodoList";
-import "./globals.css";
 import { todoList } from "./mocks";
 import TodoFilter from "./components/TodoFIlter";
-import { Status, Todo } from "./types";
-import { filterTodolist } from "./utils";
+import { Status } from "./types";
+import { TodosController } from "./controllers/TodosController";
+import TodoItem from "./components/TodoItem";
+import "./globals.css";
 
 function App() {
-  // api 호출을 통해 데이터를 불러온 것으로 가정
-  const [todos] = React.useState(todoList);
+  const [todos, setTodos] = React.useState(todoList);
   const [selectedStatus, setSelectedStatus] = React.useState<Status>("todo");
   const [search, setSearch] = React.useState("");
 
@@ -21,6 +21,11 @@ function App() {
     setSelectedStatus(status);
   };
 
+  const handleCompleteTodo = (todoId: string) => {
+    const changed = TodosController(todos).toggleComplete(todoId).get();
+    setTodos(changed);
+  };
+
   return (
     <div className="mt-20 flex flex-col items-center gap-y-10">
       <TodoComposer />
@@ -29,24 +34,21 @@ function App() {
         selectStatus={selectStatus}
         onSearchKeyword={handleSearch}
       />
-      <TodoList
-        data={TodosController(todos)
+      <TodoList>
+        {TodosController(todos)
           .filter({ status: selectedStatus, search })
-          .get()}
-      />
+          .get()
+          .map((todo) => (
+            <TodoItem
+              completeTodo={() => handleCompleteTodo(todo.id)}
+              text={todo.text}
+              status={todo.status}
+              id={todo.id}
+            />
+          ))}
+      </TodoList>
     </div>
   );
 }
 
 export default App;
-
-export const TodosController = (todoList: Todo[]) => ({
-  filter: (filter: { status: Status; search: string }) => {
-    const updated = filterTodolist(todoList, {
-      status: filter.status,
-      search: filter.search,
-    });
-    return TodosController(updated);
-  },
-  get: () => todoList,
-});

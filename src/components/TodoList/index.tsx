@@ -1,23 +1,17 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import TodoItem from "../TodoItem";
-import { Todo } from "@/types";
 
 interface Props {
-  data: Todo[];
+  children: ReactNode;
 }
 
-const TodoList = ({ data }: Props) => {
+const TodoList = ({ children }: Props) => {
   return (
     <Card className="w-full max-w-xl">
       <CardHeader className="text-center">
         <CardTitle>Todo List</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {data.map((todo) => (
-          <TodoItem text={todo.text} status={todo.status} id={todo.id} />
-        ))}
-      </CardContent>
+      <CardContent className="space-y-4">{children}</CardContent>
     </Card>
   );
 };
