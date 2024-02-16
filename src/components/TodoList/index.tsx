@@ -15,7 +15,7 @@ const TodoList = ({ data }: Props) => {
       </CardHeader>
       <CardContent className="space-y-4">
         {data.map((todo) => (
-          <TodoItem text={todo.text} />
+          <TodoItem text={todo.text} status={todo.status} id={todo.id} />
         ))}
       </CardContent>
     </Card>

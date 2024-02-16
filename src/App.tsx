@@ -5,6 +5,7 @@ import "./globals.css";
 import { todoList } from "./mocks";
 
 function App() {
+  // api 호출을 통해 데이터를 불러온 것으로 가정
   const [todos, setTodos] = React.useState(todoList);
 
   const getTodoList = () => {
